@@ -105,32 +105,27 @@ internal object AddressUtils
     private val IPV6_HEX_COMPRESSED_PATTERN = Pattern.compile("^((?:[0-9a-fA-F]{1,4}(?::[0-9a-fA-F]{1,4})*)?)::((?:[0-9a-fA-F]{1,4}(?::[0-9a-fA-F]{1,4})*)?)$")
 
     fun isIPAddress(address: String): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return InetAddresses.isNumericAddress(address)
-        } else {
-            // lots of work to support older SDKs
-            val pc = address.indexOf('%')
+        if (address.isEmpty()) return false
+        var addressPart = stripInterface(address)
+        if (addressPart.startsWith("[") && addressPart.endsWith("]")) {
+            addressPart = addressPart.substring(1, addressPart.length - 1)
+        }
+        val colonPortIdx = addressPart.lastIndexOf(":")
+        if (colonPortIdx > 0 && !addressPart.contains("::") && addressPart.count { it == ':' } == 1) {
+            addressPart = addressPart.substring(0, colonPortIdx)
+        }
 
-            val addressPart = if (pc != -1) {
-                address.substring(0, pc)
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                InetAddresses.isNumericAddress(addressPart)
             } else {
-                address
+                @Suppress("DEPRECATION")
+                IPV6_STD_PATTERN.matcher(addressPart).matches()
+                     || IPV6_HEX_COMPRESSED_PATTERN.matcher(addressPart).matches()
+                     || Patterns.IP_ADDRESS.matcher(addressPart).matches()
             }
-
-            val devicePart = if (pc != -1) {
-                address.substring(pc + 1)
-            } else {
-                null
-            }
-
-            if (devicePart != null && !DEVICE_PATTERN.matcher(devicePart).matches()) {
-                return false
-            }
-
-            @Suppress("DEPRECATION")
-            return IPV6_STD_PATTERN.matcher(addressPart).matches()
-                 || IPV6_HEX_COMPRESSED_PATTERN.matcher(addressPart).matches()
-                 || Patterns.IP_ADDRESS.matcher(addressPart).matches()
+        } catch (e: Exception) {
+            false
         }
     }
 

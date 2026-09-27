@@ -242,15 +242,17 @@ class Connector(
                 InputStreamReader(pc.inputStream, "UTF-8")
             )
 
-            var line : String
+            var line: String?
             while (rd.readLine().also { line = it } != null) {
-                val tokens = line.split("\\s+").toTypedArray()
+                val currentLine = line?.trim() ?: continue
+                if (currentLine.isEmpty()) continue
+                val tokens = currentLine.split(Regex("\\s+")).toTypedArray()
                 // IPv4
-                if (tokens.size == 6) {
+                if (tokens.size >= 6) {
                     val address = tokens[0]
                     val device = tokens[2]
                     val mac = tokens[4]
-                    val state = tokens[5]
+                    val state = tokens[tokens.size - 1]
                     for (lookupMAC in lookupMACs) {
                         if (lookupMAC.equals(mac, ignoreCase = true)
                             && AddressUtils.isIPAddress(address)
@@ -266,11 +268,11 @@ class Connector(
                 }
 
                 // IPv6
-                if (tokens.size == 7) {
+                if (tokens.size >= 7) {
                     val address = tokens[0]
                     val device = tokens[2]
                     val mac = tokens[4]
-                    val state = tokens[6]
+                    val state = tokens[tokens.size - 1]
                     for (lookupMAC in lookupMACs) {
                         if (lookupMAC.equals(mac, ignoreCase = true)
                             && AddressUtils.isIPAddress(address)
@@ -285,8 +287,8 @@ class Connector(
                     }
                 }
             }
-        } catch (e: IOException) {
-            Log.d(this, e.toString())
+        } catch (e: Throwable) {
+            Log.d(this, "getAddressesFromNeighborTable error: $e")
         }
 
         return addresses
