@@ -4,6 +4,8 @@
     <string name="about_app_license">Lisans:</string>
     <string name="about_app_version">Sürüm:</string>
     <string name="about_app_website">İnternet sitesi:</string>
+    <string name="about_app_website_fork">MeshengerTR Deposu (GitHub):</string>
+    <string name="about_app_website_original">Orijinal Meshenger Deposu (GitHub):</string>
     <string name="address_management">Adres Yönetimi</string>
     <string name="address_management_help_text">Paylaşabileceğiniz QR koduna dahil edilecek bir veya daha fazla IP adresi seçin. Bu adresler başkaları tarafından size ulaşmak için kullanılacaktır. IP adresinin ağa bağlı olarak değiştiğini unutmayın. IP adresi görünmüyorsa Wi-Fi\'nizi etkinleştirin.</string>
     <string name="app_description">Herhangi bir sunucu veya İnternet erişimi olmadan sesli ve görüntülü iletişim kurun. Sadece birbirinizin kişi QR kodunu tarayın ve birbirinizi arayın. Bu işlem evde, topluluk ağlarında veya iş yerinde çoğu ağda çalışır.</string>
