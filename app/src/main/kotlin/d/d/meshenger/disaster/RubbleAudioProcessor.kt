@@ -32,6 +32,7 @@ object RubbleAudioProcessor {
     private var automaticGainControl: AutomaticGainControl? = null
     private var audioThread: Thread? = null
 
+    @Volatile
     var gainMultiplier: Float = 3.0f // Default 3x amplification boost
     var isNoiseSuppressionEnabled: Boolean = true
 

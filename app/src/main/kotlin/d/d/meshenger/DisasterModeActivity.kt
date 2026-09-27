@@ -7,6 +7,7 @@ package d.d.meshenger
 
 import android.Manifest
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -150,17 +151,20 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
 
         btnGain3x.setOnClickListener {
             d.d.meshenger.disaster.RubbleAudioProcessor.gainMultiplier = 3.0f
-            updateGainButtonStyles(3)
+            updateButtonStates()
+            Toast.makeText(this, "Ses Yükseltme: 3x Kazanç", Toast.LENGTH_SHORT).show()
         }
 
         btnGain5x.setOnClickListener {
             d.d.meshenger.disaster.RubbleAudioProcessor.gainMultiplier = 5.0f
-            updateGainButtonStyles(5)
+            updateButtonStates()
+            Toast.makeText(this, "Ses Yükseltme: 5x Kazanç", Toast.LENGTH_SHORT).show()
         }
 
         btnGain10x.setOnClickListener {
             d.d.meshenger.disaster.RubbleAudioProcessor.gainMultiplier = 10.0f
-            updateGainButtonStyles(10)
+            updateButtonStates()
+            Toast.makeText(this, "Ses Yükseltme: 10x (MAX) Kazanç", Toast.LENGTH_SHORT).show()
         }
 
         d.d.meshenger.disaster.RubbleAudioProcessor.setOnAudioAmplitudeListener(object : d.d.meshenger.disaster.RubbleAudioProcessor.OnAudioAmplitudeListener {
@@ -253,11 +257,11 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
     }
 
     private fun updateGainButtonStyles(selectedMultiplier: Int) {
-        val activeColor = Color.parseColor("#4338CA")
-        val inactiveColor = Color.parseColor("#312E81")
-        btnGain3x.setBackgroundColor(if (selectedMultiplier == 3) activeColor else inactiveColor)
-        btnGain5x.setBackgroundColor(if (selectedMultiplier == 5) activeColor else inactiveColor)
-        btnGain10x.setBackgroundColor(if (selectedMultiplier == 10) activeColor else inactiveColor)
+        val activeColor = ColorStateList.valueOf(Color.parseColor("#4338CA"))
+        val inactiveColor = ColorStateList.valueOf(Color.parseColor("#312E81"))
+        btnGain3x.backgroundTintList = if (selectedMultiplier == 3) activeColor else inactiveColor
+        btnGain5x.backgroundTintList = if (selectedMultiplier == 5) activeColor else inactiveColor
+        btnGain10x.backgroundTintList = if (selectedMultiplier == 10) activeColor else inactiveColor
     }
 
     private fun updateButtonStates() {
@@ -277,8 +281,11 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
         containerGainBoost.visibility = if (isRubbleListening) View.VISIBLE else View.GONE
         containerAudioMeter.visibility = if (isRubbleListening) View.VISIBLE else View.GONE
 
+        val currentMultiplier = d.d.meshenger.disaster.RubbleAudioProcessor.gainMultiplier.toInt()
+        updateGainButtonStyles(currentMultiplier)
+
         if (isRubbleListening) {
-            val boostText = "${d.d.meshenger.disaster.RubbleAudioProcessor.gainMultiplier.toInt()}x Kazanç"
+            val boostText = "${currentMultiplier}x Kazanç"
             textRubbleAudioStatus.text = "Dinleme Açık ($boostText • Gürültü Filtreli)"
             textRubbleAudioStatus.setTextColor(Color.parseColor("#818CF8"))
         } else {
