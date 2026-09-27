@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -26,6 +27,8 @@ import java.util.*
 class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceivedListener {
 
     private lateinit var switchDisasterMode: SwitchCompat
+    private lateinit var textBeaconStatus: TextView
+    private lateinit var containerInteractiveControls: View
     private lateinit var radioGroupStatus: RadioGroup
     private lateinit var radioSafe: RadioButton
     private lateinit var radioHelp: RadioButton
@@ -46,6 +49,8 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
         toolbar.setNavigationOnClickListener { finish() }
 
         switchDisasterMode = findViewById(R.id.switch_disaster_mode)
+        textBeaconStatus = findViewById(R.id.text_beacon_status)
+        containerInteractiveControls = findViewById(R.id.container_interactive_controls)
         radioGroupStatus = findViewById(R.id.radio_group_status)
         radioSafe = findViewById(R.id.radio_safe)
         radioHelp = findViewById(R.id.radio_help)
@@ -70,6 +75,22 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
 
         editNotes.setText(DisasterModeManager.medicalNotes)
 
+        // Disabled touch listener that prompts user if broadcast is OFF
+        val disabledTouchListener = View.OnTouchListener { _, event ->
+            if (!DisasterModeManager.isDisasterModeActive()) {
+                if (event.action == MotionEvent.ACTION_UP) {
+                    showDisabledWarning()
+                }
+                return@OnTouchListener true
+            }
+            false
+        }
+
+        radioSafe.setOnTouchListener(disabledTouchListener)
+        radioHelp.setOnTouchListener(disabledTouchListener)
+        radioMedical.setOnTouchListener(disabledTouchListener)
+        editNotes.setOnTouchListener(disabledTouchListener)
+
         switchDisasterMode.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 checkAndRequestLocationPermissions()
@@ -83,40 +104,60 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
         }
 
         radioGroupStatus.setOnCheckedChangeListener { _, checkedId ->
-            DisasterModeManager.currentStatus = when (checkedId) {
-                R.id.radio_help -> DisasterSignal.StatusType.HELP
-                R.id.radio_medical -> DisasterSignal.StatusType.MEDICAL
-                else -> DisasterSignal.StatusType.SAFE
+            if (DisasterModeManager.isDisasterModeActive()) {
+                DisasterModeManager.currentStatus = when (checkedId) {
+                    R.id.radio_help -> DisasterSignal.StatusType.HELP
+                    R.id.radio_medical -> DisasterSignal.StatusType.MEDICAL
+                    else -> DisasterSignal.StatusType.SAFE
+                }
             }
         }
 
         editNotes.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                DisasterModeManager.medicalNotes = s?.toString() ?: ""
+                if (DisasterModeManager.isDisasterModeActive()) {
+                    DisasterModeManager.medicalNotes = s?.toString() ?: ""
+                }
             }
             override fun afterTextChanged(s: Editable?) {}
         })
 
         btnWhistle.setOnClickListener {
-            if (DisasterModeManager.isWhistleActive()) {
-                DisasterModeManager.stopWhistle()
-            } else {
-                DisasterModeManager.startWhistle()
+            checkBroadcastActive {
+                if (DisasterModeManager.isWhistleActive()) {
+                    DisasterModeManager.stopWhistle()
+                } else {
+                    DisasterModeManager.startWhistle()
+                }
+                updateButtonStates()
             }
-            updateButtonStates()
         }
 
         btnStrobe.setOnClickListener {
-            if (DisasterModeManager.isStrobeActive()) {
-                DisasterModeManager.stopStrobe(this)
-            } else {
-                DisasterModeManager.startStrobe(this)
+            checkBroadcastActive {
+                if (DisasterModeManager.isStrobeActive()) {
+                    DisasterModeManager.stopStrobe(this)
+                } else {
+                    DisasterModeManager.startStrobe(this)
+                }
+                updateButtonStates()
             }
-            updateButtonStates()
         }
 
         updateButtonStates()
+    }
+
+    private fun showDisabledWarning() {
+        Toast.makeText(this, "⚠️ Lütfen önce Afet Kipi Yayınını etkinleştirin! / Please enable Disaster Broadcast first!", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun checkBroadcastActive(onActiveAction: () -> Unit) {
+        if (DisasterModeManager.isDisasterModeActive()) {
+            onActiveAction()
+        } else {
+            showDisabledWarning()
+        }
     }
 
     private fun checkAndRequestLocationPermissions() {
@@ -137,19 +178,30 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
     }
 
     private fun updateButtonStates() {
+        val isActive = DisasterModeManager.isDisasterModeActive()
+        containerInteractiveControls.alpha = if (isActive) 1.0f else 0.5f
+
+        if (isActive) {
+            textBeaconStatus.text = "Yayın Açık (Wi-Fi & Bluetooth Active)"
+            textBeaconStatus.setTextColor(Color.parseColor("#4ADE80"))
+        } else {
+            textBeaconStatus.text = "Yayın Kapalı / Broadcast Inactive"
+            textBeaconStatus.setTextColor(Color.parseColor("#94A3B8"))
+        }
+
         if (DisasterModeManager.isWhistleActive()) {
-            btnWhistle.text = "🔊 Düdük Durdur"
+            btnWhistle.text = "🔊 SIREN DURDUR"
             btnWhistle.setBackgroundColor(Color.RED)
         } else {
-            btnWhistle.text = "🔊 Düdük (Whistle)"
+            btnWhistle.text = "🔊 ACOUSTIC SIREN\n(3.5 kHz DÜDÜK)"
             btnWhistle.setBackgroundColor(Color.parseColor("#D97706"))
         }
 
         if (DisasterModeManager.isStrobeActive()) {
-            btnStrobe.text = "🔦 Flaş Durdur"
+            btnStrobe.text = "🔦 FLAŞ DURDUR"
             btnStrobe.setBackgroundColor(Color.RED)
         } else {
-            btnStrobe.text = "🔦 SOS Flaş (Strobe)"
+            btnStrobe.text = "🔦 VISUAL SOS\n(STROBE FLAŞ)"
             btnStrobe.setBackgroundColor(Color.parseColor("#4F46E5"))
         }
     }
@@ -201,15 +253,15 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
 
             when (signal.status) {
                 DisasterSignal.StatusType.HELP -> {
-                    badgeView.text = "🟥 YARDIM İSTİYOR"
-                    badgeView.setBackgroundColor(Color.RED)
+                    badgeView.text = "🔴 SOS / RED ALERT (HELP NEEDED)"
+                    badgeView.setBackgroundColor(Color.parseColor("#DC2626"))
                 }
                 DisasterSignal.StatusType.MEDICAL -> {
-                    badgeView.text = "🟦 TIBBİ DESTEK"
+                    badgeView.text = "🔵 MEDICAL ASSISTANCE NEEDED"
                     badgeView.setBackgroundColor(Color.parseColor("#2563EB"))
                 }
                 DisasterSignal.StatusType.SAFE -> {
-                    badgeView.text = "🟩 GÜVENDE"
+                    badgeView.text = "🟢 STATUS OK / SAFE"
                     badgeView.setBackgroundColor(Color.parseColor("#16A34A"))
                 }
             }

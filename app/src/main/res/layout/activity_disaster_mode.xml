@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#DC2626"
-        app:title="🚨 Afet Kipi (Disaster Mode)"
+        app:title="🚨 AFET KİPİ / DISASTER BEACON (ISO 22324)"
         app:titleTextColor="#FFFFFF" />
 
     <ScrollView
@@ -25,8 +25,9 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- 1. Afet Kipi Switch Card -->
+            <!-- 1. Afet Kipi Main Beacon Switch Card -->
             <LinearLayout
+                android:id="@+id/card_beacon_switch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -44,15 +45,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📡 Afet Kipi Yayını"
+                        android:text="📡 AFET KİPİ YAYINI (DISASTER BEACON)"
                         android:textColor="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="17sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/text_beacon_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Wi-Fi UDP &amp; Bluetooth Sinyal Yayını"
+                        android:text="Yayın Kapalı / Broadcast Inactive"
                         android:textColor="#94A3B8"
                         android:textSize="12sp"
                         android:layout_marginTop="2dp" />
@@ -66,127 +68,137 @@
                     android:minWidth="48dp" />
             </LinearLayout>
 
-            <!-- 2. Durum Seçimi Header -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="⚠️ ACİL DURUMUNUZU SEÇİN"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="?android:textColorPrimary"
-                android:layout_marginTop="18dp"
-                android:layout_marginBottom="8dp" />
-
-            <!-- Radio Group Status Buttons -->
-            <RadioGroup
-                android:id="@+id/radio_group_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <RadioButton
-                    android:id="@+id/radio_help"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="56dp"
-                    android:text="🟥 YARDIM İSTİYORUM / ENKAZ ALTINDAYIM"
-                    android:textSize="15sp"
-                    android:textColor="#DC2626"
-                    android:textStyle="bold"
-                    android:background="#FEE2E2"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp"
-                    android:layout_marginBottom="8dp" />
-
-                <RadioButton
-                    android:id="@+id/radio_medical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="56dp"
-                    android:text="🟦 TİBBİ DESTEK İHTİYACI VAR"
-                    android:textSize="15sp"
-                    android:textColor="#2563EB"
-                    android:textStyle="bold"
-                    android:background="#DBEAFE"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp"
-                    android:layout_marginBottom="8dp" />
-
-                <RadioButton
-                    android:id="@+id/radio_safe"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="56dp"
-                    android:text="🟩 GÜVENDEYİM"
-                    android:textSize="15sp"
-                    android:textColor="#16A34A"
-                    android:textStyle="bold"
-                    android:background="#DCFCE7"
-                    android:checked="true"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp" />
-            </RadioGroup>
-
-            <!-- 3. Notlar Alanı Header -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="📋 KAN GRUBU / ENKAZ / BİLGİ NOTU"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="?android:textColorPrimary"
-                android:layout_marginTop="18dp"
-                android:layout_marginBottom="6dp" />
-
-            <EditText
-                android:id="@+id/edit_medical_notes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="56dp"
-                android:hint="Örn: Kan Grubu A Rh+, 2. Kat Salon Enkaz Altı"
-                android:inputType="textMultiLine"
-                android:textSize="15sp"
-                android:padding="14dp"
-                android:background="@android:drawable/editbox_background" />
-
-            <!-- 4. Huge Action Buttons (Düdük & SOS Flaş) -->
+            <!-- Interactive Section Container (Disabled until switch is ON) -->
             <LinearLayout
+                android:id="@+id/container_interactive_controls"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="18dp">
+                android:orientation="vertical"
+                android:alpha="0.5">
 
-                <Button
-                    android:id="@+id/btn_whistle"
-                    android:layout_width="0dp"
-                    android:layout_height="64dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="6dp"
-                    android:text="🔊 ACİL DÜDÜK"
-                    android:textSize="16sp"
+                <!-- 2. Durum Seçimi Header -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="⚠️ EMERGENCY STATUS (ISO 22324 STANDARDS)"
+                    android:textSize="13sp"
                     android:textStyle="bold"
-                    android:backgroundTint="#D97706"
-                    android:textColor="#FFFFFF" />
+                    android:textColor="?android:textColorPrimary"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginBottom="8dp" />
 
-                <Button
-                    android:id="@+id/btn_strobe"
-                    android:layout_width="0dp"
-                    android:layout_height="64dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="6dp"
-                    android:text="🔦 SOS FLAŞ"
-                    android:textSize="16sp"
+                <!-- Radio Group Status Buttons -->
+                <RadioGroup
+                    android:id="@+id/radio_group_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/radio_help"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
+                        android:text="🔴 SOS / RED ALERT (HELP NEEDED / ENKAZ ALTINDA)"
+                        android:textSize="14sp"
+                        android:textColor="#DC2626"
+                        android:textStyle="bold"
+                        android:background="#FEE2E2"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="12dp"
+                        android:layout_marginBottom="8dp" />
+
+                    <RadioButton
+                        android:id="@+id/radio_medical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
+                        android:text="🔵 MEDICAL ASSISTANCE (TIBBİ YARDIM İHTİYACI)"
+                        android:textSize="14sp"
+                        android:textColor="#2563EB"
+                        android:textStyle="bold"
+                        android:background="#DBEAFE"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="12dp"
+                        android:layout_marginBottom="8dp" />
+
+                    <RadioButton
+                        android:id="@+id/radio_safe"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
+                        android:text="🟢 STATUS OK / SAFE (GÜVENDEYİM)"
+                        android:textSize="14sp"
+                        android:textColor="#16A34A"
+                        android:textStyle="bold"
+                        android:background="#DCFCE7"
+                        android:checked="true"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="12dp" />
+                </RadioGroup>
+
+                <!-- 3. Notlar Alanı Header -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📋 EMERGENCY MEDICAL &amp; LOCATION DATA"
+                    android:textSize="13sp"
                     android:textStyle="bold"
-                    android:backgroundTint="#4F46E5"
-                    android:textColor="#FFFFFF" />
+                    android:textColor="?android:textColorPrimary"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginBottom="6dp" />
+
+                <EditText
+                    android:id="@+id/edit_medical_notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="56dp"
+                    android:hint="Örn: Blood A Rh+, Floor 2, Rubble Trap / Enkaz Altı"
+                    android:inputType="textMultiLine"
+                    android:textSize="15sp"
+                    android:padding="14dp"
+                    android:background="@android:drawable/editbox_background" />
+
+                <!-- 4. Action Buttons (Düdük & SOS Flaş) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="18dp">
+
+                    <Button
+                        android:id="@+id/btn_whistle"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:text="🔊 ACOUSTIC SIREN\n(3.5 kHz DÜDÜK)"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:backgroundTint="#D97706"
+                        android:textColor="#FFFFFF" />
+
+                    <Button
+                        android:id="@+id/btn_strobe"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:text="🔦 VISUAL SOS\n(STROBE FLAŞ)"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:backgroundTint="#4F46E5"
+                        android:textColor="#FFFFFF" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <!-- 5. Sinyal Listesi Header -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="📡 YAKINDAKİ AFET SİNYALLERİ (CANLI AĞ)"
-                android:textSize="15sp"
+                android:text="📡 DISASTER BEACON NETWORK (CANLI SİNYALLER)"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="?android:textColorPrimary"
                 android:layout_marginTop="22dp"
@@ -196,9 +208,9 @@
                 android:id="@+id/text_empty_signals"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Henüz çevrede aktif bir acil durum sinyali algılanmadı."
+                android:text="Henüz çevrede aktif bir acil durum sinyali algılanmadı / No active beacon detected."
                 android:textColor="#9CA3AF"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:gravity="center"
                 android:padding="20dp" />
 
