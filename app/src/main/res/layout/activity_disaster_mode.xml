@@ -10,13 +10,14 @@
         android:id="@+id/disaster_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="#DC2626"
         app:title="🚨 Afet Kipi (Disaster Mode)"
         app:titleTextColor="#FFFFFF" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,39 +25,59 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Main Toggle Card -->
+            <!-- 1. Afet Kipi Switch Card -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="16dp"
-                android:background="#1F2937"
-                android:gravity="center_vertical">
+                android:background="#1E293B"
+                android:gravity="center_vertical"
+                android:minHeight="64dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Afet Kipi Yayınını Etkinleştir"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📡 Afet Kipi Yayını"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Wi-Fi UDP &amp; Bluetooth Sinyal Yayını"
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switch_disaster_mode"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:minWidth="48dp" />
             </LinearLayout>
 
+            <!-- 2. Durum Seçimi Header -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Durumunuzu Seçin"
-                android:textSize="16sp"
+                android:text="⚠️ ACİL DURUMUNUZU SEÇİN"
+                android:textSize="14sp"
                 android:textStyle="bold"
-                android:layout_marginTop="16dp"
+                android:textColor="?android:textColorPrimary"
+                android:layout_marginTop="18dp"
                 android:layout_marginBottom="8dp" />
 
+            <!-- Radio Group Status Buttons -->
             <RadioGroup
                 android:id="@+id/radio_group_status"
                 android:layout_width="match_parent"
@@ -64,101 +85,127 @@
                 android:orientation="vertical">
 
                 <RadioButton
-                    android:id="@+id/radio_safe"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="🟩 Güvendeyim (Safe)"
-                    android:textSize="16sp"
-                    android:checked="true"
-                    android:padding="8dp" />
-
-                <RadioButton
                     android:id="@+id/radio_help"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🟥 Yardım İstiyorum / Enkaz Altındayım (SOS)"
-                    android:textSize="16sp"
-                    android:textColor="#EF4444"
+                    android:minHeight="56dp"
+                    android:text="🟥 YARDIM İSTİYORUM / ENKAZ ALTINDAYIM"
+                    android:textSize="15sp"
+                    android:textColor="#DC2626"
                     android:textStyle="bold"
-                    android:padding="8dp" />
+                    android:background="#FEE2E2"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
+                    android:layout_marginBottom="8dp" />
 
                 <RadioButton
                     android:id="@+id/radio_medical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🟦 Tıbbi Desteğe İhtiyacım Var (Medical Help)"
-                    android:textSize="16sp"
-                    android:textColor="#3B82F6"
-                    android:padding="8dp" />
+                    android:minHeight="56dp"
+                    android:text="🟦 TİBBİ DESTEK İHTİYACI VAR"
+                    android:textSize="15sp"
+                    android:textColor="#2563EB"
+                    android:textStyle="bold"
+                    android:background="#DBEAFE"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
+                    android:layout_marginBottom="8dp" />
+
+                <RadioButton
+                    android:id="@+id/radio_safe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="56dp"
+                    android:text="🟩 GÜVENDEYİM"
+                    android:textSize="15sp"
+                    android:textColor="#16A34A"
+                    android:textStyle="bold"
+                    android:background="#DCFCE7"
+                    android:checked="true"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp" />
             </RadioGroup>
 
+            <!-- 3. Notlar Alanı Header -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Kan Grubu / Tıbbi Notlar / Enkaz Bilgisi"
+                android:text="📋 KAN GRUBU / ENKAZ / BİLGİ NOTU"
                 android:textSize="14sp"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="4dp" />
+                android:textStyle="bold"
+                android:textColor="?android:textColorPrimary"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="6dp" />
 
             <EditText
                 android:id="@+id/edit_medical_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Örn: Kan Grubu A Rh+, 2 Kişi Enkaz Altında"
+                android:minHeight="56dp"
+                android:hint="Örn: Kan Grubu A Rh+, 2. Kat Salon Enkaz Altı"
                 android:inputType="textMultiLine"
-                android:minLines="2"
-                android:padding="10dp"
+                android:textSize="15sp"
+                android:padding="14dp"
                 android:background="@android:drawable/editbox_background" />
 
+            <!-- 4. Huge Action Buttons (Düdük & SOS Flaş) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="18dp">
 
                 <Button
                     android:id="@+id/btn_whistle"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="64dp"
                     android:layout_weight="1"
-                    android:layout_marginEnd="4dp"
-                    android:text="🔊 Düdük (Whistle)"
+                    android:layout_marginEnd="6dp"
+                    android:text="🔊 ACİL DÜDÜK"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
                     android:backgroundTint="#D97706"
                     android:textColor="#FFFFFF" />
 
                 <Button
                     android:id="@+id/btn_strobe"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="64dp"
                     android:layout_weight="1"
-                    android:layout_marginStart="4dp"
-                    android:text="🔦 SOS Flaş (Strobe)"
+                    android:layout_marginStart="6dp"
+                    android:text="🔦 SOS FLAŞ"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
                     android:backgroundTint="#4F46E5"
                     android:textColor="#FFFFFF" />
             </LinearLayout>
 
+            <!-- 5. Sinyal Listesi Header -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Yakındaki Afet Sinyalleri &amp; Çağrılar"
-                android:textSize="16sp"
+                android:text="📡 YAKINDAKİ AFET SİNYALLERİ (CANLI AĞ)"
+                android:textSize="15sp"
                 android:textStyle="bold"
-                android:layout_marginTop="20dp"
+                android:textColor="?android:textColorPrimary"
+                android:layout_marginTop="22dp"
                 android:layout_marginBottom="8dp" />
 
             <TextView
                 android:id="@+id/text_empty_signals"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Henüz yakında yayın yapan bir acil durum sinyali tespit edilmedi."
+                android:text="Henüz çevrede aktif bir acil durum sinyali algılanmadı."
                 android:textColor="#9CA3AF"
+                android:textSize="14sp"
                 android:gravity="center"
-                android:padding="16dp" />
+                android:padding="20dp" />
 
             <ListView
                 android:id="@+id/list_disaster_signals"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="320dp"
                 android:divider="#374151"
                 android:dividerHeight="1dp" />
 
