@@ -108,7 +108,7 @@
     <string name="listen_for_incoming_calls">Listen for incoming calls.</string>
     <string name="menu_about">ℹ️ ABOUT / HAKKINDA</string>
     <string name="menu_backup">💾 BACKUP / YEDEKLE</string>
-    <string name="menu_disaster_mode">🚨 DISASTER MODE / AFET KİPİ (ISO 22324)</string>
+    <string name="menu_disaster_mode">🚨 DISASTER MODE / AFET KİPİ</string>
     <string name="menu_license">📜 LICENSE / LİSANS</string>
     <string name="menu_settings">⚙️ SETTINGS / AYARLAR</string>
     <string name="menu_shutdown">🛑 EXIT / KAPAT</string>

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#DC2626"
-        app:title="🚨 AFET KİPİ / DISASTER BEACON (ISO 22324)"
+        app:title="🚨 AFET KİPİ / DISASTER BEACON"
         app:titleTextColor="#FFFFFF" />
 
     <ScrollView
@@ -80,7 +80,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="⚠️ EMERGENCY STATUS (ISO 22324 STANDARDS)"
+                    android:text="⚠️ ACİL DURUM / EMERGENCY STATUS"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:textColor="?android:textColorPrimary"
