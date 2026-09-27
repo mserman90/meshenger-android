@@ -68,8 +68,14 @@ object DisasterModeManager {
 
     fun handleIncomingSignal(signal: DisasterSignal, context: Context?) {
         val now = System.currentTimeMillis()
-        // Purge old seen entries (> 10 mins)
-        seenMessageIds.entries.removeIf { now - it.value > 600_000 }
+        // Purge old seen entries (> 10 mins) with backward-compatible iterator
+        val seenIterator = seenMessageIds.entries.iterator()
+        while (seenIterator.hasNext()) {
+            val entry = seenIterator.next()
+            if (now - entry.value > 600_000) {
+                seenIterator.remove()
+            }
+        }
 
         // 1. Self-Loop Protection: Ignore messages created by this device
         if (ownDeviceId.isNotEmpty() && signal.senderDeviceId == ownDeviceId) {
@@ -152,8 +158,14 @@ object DisasterModeManager {
 
     fun getReceivedSignals(): List<DisasterSignal> {
         val now = System.currentTimeMillis()
-        // Remove stale signals older than 5 minutes (300,000 ms)
-        receivedSignalsMap.entries.removeIf { now - it.value.timestamp > 300_000 }
+        // Remove stale signals older than 5 minutes (300,000 ms) using backward-compatible iterator
+        val signalIterator = receivedSignalsMap.entries.iterator()
+        while (signalIterator.hasNext()) {
+            val entry = signalIterator.next()
+            if (now - entry.value.timestamp > 300_000) {
+                signalIterator.remove()
+            }
+        }
         return receivedSignalsMap.values.sortedByDescending { it.timestamp }
     }
 
