@@ -119,3 +119,13 @@ This phase was concluded with Meshenger 3.0.0.
 This phase focuses on bug fixing, stabilization, usability improvements and some features.
 
 This phase is concluded with the Meshenger 4.0.0 and further releases. Now an app with the intented features exists, which we hope serves as a use case for mesh networks without Internet and will help those in need.
+
+### Fifth Phase (MeshengerTR Emergency & Mesh Enhancements)
+
+This phase introduced advanced off-grid emergency capabilities, disaster beaconing, rubble audio processing, and international safety standards:
+
+1. **Disaster Mode (SOS Beaconing):** Off-grid emergency broadcasting over UDP Multicast (Port 9876) and Bluetooth Low Energy / Mesh Transport. Includes location coordinates, blood group, medical notes, rubble location, acoustic whistle siren, and visual SOS strobe flash.
+2. **Rubble Audio Listener & Amplifier (`RubbleAudioProcessor`):** Low-latency microphone audio processing, hardware noise suppression (`NoiseSuppressor`/`AGC`), software bandpass filtering (300Hz-3.4kHz human voice/tapping frequency isolation), 3x/5x/10x gain boost, live amplitude progress meter, and peak noise activity detection. Includes automatic Audio Focus management (pauses during active WebRTC calls and resumes automatically).
+3. **Multi-hop Mesh Relay:** Automatic emergency signal relaying across intermediate neighbor nodes to extend broadcast range (`ttl = 5`, `hopCount`), deduplication (`messageId`, 10-minute cache), and self-loop prevention (`senderDeviceId` public key derivation).
+4. **ISO 22324 Safety Standards & Bilingual UI:** Fully bilingual interface (Turkish & English) with standardized ISO 22324 safety color status badges (🟢 ONLINE, 🔴 OFFLINE, 🟡 PENDING, ⚠️ ERROR, ⚪ UNREACHABLE).
+5. **Direct GitHub Releases Update:** In-app one-click link in the About activity to download direct release APKs from [GitHub Releases](https://github.com/mserman90/meshenger-android/releases).
