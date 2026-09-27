@@ -52,13 +52,13 @@ internal class ContactListAdapter(
         val canvas = Canvas(bitmap)
         val p = Paint()
         p.color = when (contact.state) {
-            Contact.State.CONTACT_ONLINE -> Color.parseColor("#00ff0a") // green
-            Contact.State.CONTACT_OFFLINE -> Color.parseColor("#ff0000") // red
-            Contact.State.NETWORK_UNREACHABLE -> Color.parseColor("#f25400") // light orange
-            Contact.State.APP_NOT_RUNNING -> Color.parseColor("#ff7000") // orange
-            Contact.State.AUTHENTICATION_FAILED -> Color.parseColor("#612c00") // brown
-            Contact.State.COMMUNICATION_FAILED -> Color.parseColor("#808080") // grey
-            Contact.State.PENDING -> Color.parseColor("#00000000") // transparent
+            Contact.State.CONTACT_ONLINE -> Color.parseColor("#16A34A") // ISO 22324 Green (Safe/Reachable)
+            Contact.State.CONTACT_OFFLINE -> Color.parseColor("#DC2626") // ISO 22324 Red (Danger/Offline)
+            Contact.State.NETWORK_UNREACHABLE -> Color.parseColor("#64748B") // ISO 22324 Slate Grey (Unreachable)
+            Contact.State.APP_NOT_RUNNING -> Color.parseColor("#94A3B8") // ISO 22324 Light Grey (App Inactive)
+            Contact.State.AUTHENTICATION_FAILED -> Color.parseColor("#B91C1C") // ISO 22324 Dark Red (Auth Failed)
+            Contact.State.COMMUNICATION_FAILED -> Color.parseColor("#F97316") // ISO 22324 Warning Orange (Error)
+            Contact.State.PENDING -> Color.parseColor("#EAB308") // ISO 22324 Amber Yellow (Pending)
         }
         canvas.drawCircle(100f, 100f, 100f, p)
         if (contact.blocked) {
