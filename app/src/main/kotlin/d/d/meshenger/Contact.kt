@@ -70,7 +70,7 @@ class Contact(
                     address = address.lowercase(Locale.ROOT)
                 } else if (AddressUtils.isMACAddress(address)) {
                     // for backwards compatibility
-                    address = AddressUtils.getLinkLocalFromMAC(address)!!
+                    address = AddressUtils.getLinkLocalFromMAC(address) ?: throw JSONException("Invalid MAC Address $address")
                 } else {
                     throw JSONException("Invalid Address $address")
                 }

@@ -97,39 +97,26 @@ internal object Utils {
             .toByteArray()
     }
 
-   private fun getExternalFileSize(ctx: Context, uri: Uri?): Long {
-        val cursor = ctx.contentResolver.query(uri!!, null, null, null, null)
-        cursor!!.moveToFirst()
-        val index = cursor.getColumnIndex(OpenableColumns.SIZE)
-        if (index >= 0) {
-            val size = cursor.getLong(index)
-            cursor.close()
-            return size
-        } else {
-            cursor.close()
-            return -1
-        }
+    private fun getExternalFileSize(ctx: Context, uri: Uri?): Long {
+        if (uri == null) return -1
+        return ctx.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                val index = cursor.getColumnIndex(OpenableColumns.SIZE)
+                if (index >= 0) cursor.getLong(index) else -1
+            } else {
+                -1
+            }
+        } ?: -1
     }
 
     fun readExternalFile(ctx: Context, uri: Uri): ByteArray {
-        val size = getExternalFileSize(ctx, uri).toInt()
-        val isstream = ctx.contentResolver.openInputStream(uri)
-        val buffer = ByteArrayOutputStream()
-        var nRead = 0
-        val dataArray = ByteArray(size)
-        if (isstream != null && size > 0) {
-            while (isstream.read(dataArray, 0, dataArray.size).also { nRead = it } != -1 && nRead > 0) {
-                buffer.write(dataArray, 0, nRead)
-            }
-        }
-        isstream?.close()
-        return dataArray
+        return ctx.contentResolver.openInputStream(uri)?.use { it.readBytes() } ?: ByteArray(0)
     }
 
     fun writeExternalFile(ctx: Context, uri: Uri, dataArray: ByteArray) {
-        val fos = ctx.contentResolver.openOutputStream(uri)
-        fos!!.write(dataArray)
-        fos.close()
+        ctx.contentResolver.openOutputStream(uri)?.use { fos ->
+            fos.write(dataArray)
+        }
     }
 
     // write file to external storage

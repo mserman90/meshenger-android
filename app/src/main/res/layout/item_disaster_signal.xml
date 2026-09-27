@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/signal_sender_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ahmet Yılmaz"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/signal_status_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YARDIM İSTİYORUM"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="#EF4444"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/signal_location_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Konum: Enlem 41.0082, Boylam 28.9784 (IP: 192.168.1.45)"
+        android:textSize="13sp"
+        android:textColor="#9CA3AF"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/signal_notes_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Not: Kan Grubu A Rh+, 2 Kişi Enkaz Altında"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:id="@+id/signal_time_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Son Görülme: 10 saniye önce"
+        android:textSize="11sp"
+        android:textColor="#6B7280"
+        android:layout_marginTop="2dp" />
+
+</LinearLayout>

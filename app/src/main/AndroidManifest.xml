@@ -21,9 +21,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <!-- For audio over Bluetooth (BLUETOOTH only for SDK <= 30) -->
+    <!-- Bluetooth permissions for Audio routing & Backup Bluetooth Transport -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" tools:targetApi="31" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" tools:targetApi="31" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 
     <!-- Run server socket as foreground service. As such we must display a notification (sdk-28) -->
@@ -42,6 +45,12 @@
     <!-- Allow the app to start on device bootup -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- Disaster Mode permissions for GPS location, Flashlight SOS, and UDP Multicast discovery -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -52,6 +61,10 @@
 
         <activity
             android:name=".MainActivity" />
+
+        <activity
+            android:name=".DisasterModeActivity"
+            android:parentActivityName=".MainActivity" />
 
         <activity
             android:name=".QRShowActivity" />

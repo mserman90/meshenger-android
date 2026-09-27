@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?android:attr/windowBackground">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/disaster_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="🚨 Afet Kipi (Disaster Mode)"
+        app:titleTextColor="#FFFFFF" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Main Toggle Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="#1F2937"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Afet Kipi Yayınını Etkinleştir"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_disaster_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Durumunuzu Seçin"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
+
+            <RadioGroup
+                android:id="@+id/radio_group_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/radio_safe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🟩 Güvendeyim (Safe)"
+                    android:textSize="16sp"
+                    android:checked="true"
+                    android:padding="8dp" />
+
+                <RadioButton
+                    android:id="@+id/radio_help"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🟥 Yardım İstiyorum / Enkaz Altındayım (SOS)"
+                    android:textSize="16sp"
+                    android:textColor="#EF4444"
+                    android:textStyle="bold"
+                    android:padding="8dp" />
+
+                <RadioButton
+                    android:id="@+id/radio_medical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🟦 Tıbbi Desteğe İhtiyacım Var (Medical Help)"
+                    android:textSize="16sp"
+                    android:textColor="#3B82F6"
+                    android:padding="8dp" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Kan Grubu / Tıbbi Notlar / Enkaz Bilgisi"
+                android:textSize="14sp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/edit_medical_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Örn: Kan Grubu A Rh+, 2 Kişi Enkaz Altında"
+                android:inputType="textMultiLine"
+                android:minLines="2"
+                android:padding="10dp"
+                android:background="@android:drawable/editbox_background" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp">
+
+                <Button
+                    android:id="@+id/btn_whistle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:text="🔊 Düdük (Whistle)"
+                    android:backgroundTint="#D97706"
+                    android:textColor="#FFFFFF" />
+
+                <Button
+                    android:id="@+id/btn_strobe"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="🔦 SOS Flaş (Strobe)"
+                    android:backgroundTint="#4F46E5"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Yakındaki Afet Sinyalleri &amp; Çağrılar"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/text_empty_signals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Henüz yakında yayın yapan bir acil durum sinyali tespit edilmedi."
+                android:textColor="#9CA3AF"
+                android:gravity="center"
+                android:padding="16dp" />
+
+            <ListView
+                android:id="@+id/list_disaster_signals"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:divider="#374151"
+                android:dividerHeight="1dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

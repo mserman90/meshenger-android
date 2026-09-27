@@ -229,6 +229,9 @@ class MainActivity : BaseActivity(), ServiceConnection {
 
     private fun menuAction(itemId: Int) {
         when (itemId) {
+            R.string.menu_disaster_mode -> {
+                startActivity(Intent(applicationContext, DisasterModeActivity::class.java))
+            }
             R.string.menu_settings -> {
                 startActivity(Intent(applicationContext, SettingsActivity::class.java))
             }
@@ -247,7 +250,7 @@ class MainActivity : BaseActivity(), ServiceConnection {
 
     // request password for setting activity
     private fun showMenuPasswordDialog(itemId: Int, menuPassword: String) {
-        val dialog = Dialog(applicationContext)
+        val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_enter_database_password)
         dialog.setCancelable(false)
         dialog.setCanceledOnTouchOutside(false)
@@ -307,9 +310,10 @@ class MainActivity : BaseActivity(), ServiceConnection {
 
         val hideMenus = Database.getSettings().hideMenus
         val titles =  if (hideMenus) {
-            mutableListOf(R.string.menu_settings)
+            mutableListOf(R.string.menu_disaster_mode, R.string.menu_settings)
         } else {
             mutableListOf(
+                R.string.menu_disaster_mode,
                 R.string.menu_settings, R.string.menu_backup,
                 R.string.menu_about, R.string.menu_shutdown)
         }

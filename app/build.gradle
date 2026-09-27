@@ -30,6 +30,10 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
 
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
         includeInApk = false
@@ -66,6 +70,7 @@ dependencies {
     implementation 'androidx.viewpager2:viewpager2:1.1.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'im.conversations.webrtc:webrtc-android:119.0.0'
+    testImplementation 'junit:junit:4.13.2'
     //implementation 'ch.threema:webrtc-android:123.0.0'
     //implementation files('../webrtc/libwebrtc-123.0.0.aar')
 }
