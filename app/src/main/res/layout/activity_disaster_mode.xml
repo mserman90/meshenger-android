@@ -191,6 +191,137 @@
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
 
+                <!-- 5. Enkaz Dinleme ve Ses Yükseltici Card -->
+                <LinearLayout
+                    android:id="@+id/card_rubble_audio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:layout_marginTop="18dp"
+                    android:background="#1E1B4B">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🎙️ ENKAZ DİNLEME &amp; SES YÜKSELTİCİ"
+                                android:textColor="#FFFFFF"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text_rubble_audio_status"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Dinleme Kapalı / Listener Inactive"
+                                android:textColor="#A5B4FC"
+                                android:textSize="12sp"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switch_rubble_audio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"
+                            android:minWidth="48dp" />
+                    </LinearLayout>
+
+                    <!-- Amplification Boost Level Selector -->
+                    <LinearLayout
+                        android:id="@+id/container_gain_boost"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="12dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🔊 SES KAZANCI:"
+                            android:textColor="#C7D2FE"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="8dp" />
+
+                        <Button
+                            android:id="@+id/btn_gain_3x"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:text="3x"
+                            android:textSize="12sp"
+                            android:textColor="#FFFFFF"
+                            android:backgroundTint="#4338CA"
+                            android:layout_marginEnd="4dp" />
+
+                        <Button
+                            android:id="@+id/btn_gain_5x"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:text="5x"
+                            android:textSize="12sp"
+                            android:textColor="#FFFFFF"
+                            android:backgroundTint="#3730A3"
+                            android:layout_marginEnd="4dp" />
+
+                        <Button
+                            android:id="@+id/btn_gain_10x"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:text="10x (MAX)"
+                            android:textSize="11sp"
+                            android:textColor="#FFFFFF"
+                            android:backgroundTint="#312E81" />
+                    </LinearLayout>
+
+                    <!-- Real-time Live Audio Amplitude Meter -->
+                    <LinearLayout
+                        android:id="@+id/container_audio_meter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone">
+
+                        <ProgressBar
+                            android:id="@+id/progress_audio_amplitude"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="14dp"
+                            android:max="100"
+                            android:progress="0"
+                            android:progressDrawable="@android:drawable/progress_horizontal" />
+
+                        <TextView
+                            android:id="@+id/text_audio_peak_warning"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ortam Dinleniyor... / Monitoring Audio..."
+                            android:textColor="#818CF8"
+                            android:textSize="12sp"
+                            android:gravity="center"
+                            android:layout_marginTop="6dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <!-- 5. Sinyal Listesi Header -->

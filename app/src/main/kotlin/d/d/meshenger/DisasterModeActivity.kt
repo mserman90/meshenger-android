@@ -39,6 +39,17 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
     private lateinit var listSignals: ListView
     private lateinit var textEmptySignals: TextView
 
+    // Rubble Audio Listener & Amplifier Views
+    private lateinit var switchRubbleAudio: SwitchCompat
+    private lateinit var textRubbleAudioStatus: TextView
+    private lateinit var containerGainBoost: View
+    private lateinit var btnGain3x: Button
+    private lateinit var btnGain5x: Button
+    private lateinit var btnGain10x: Button
+    private lateinit var containerAudioMeter: View
+    private lateinit var progressAudioAmplitude: ProgressBar
+    private lateinit var textAudioPeakWarning: TextView
+
     private lateinit var adapter: SignalAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,12 +72,23 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
         listSignals = findViewById(R.id.list_disaster_signals)
         textEmptySignals = findViewById(R.id.text_empty_signals)
 
+        switchRubbleAudio = findViewById(R.id.switch_rubble_audio)
+        textRubbleAudioStatus = findViewById(R.id.text_rubble_audio_status)
+        containerGainBoost = findViewById(R.id.container_gain_boost)
+        btnGain3x = findViewById(R.id.btn_gain_3x)
+        btnGain5x = findViewById(R.id.btn_gain_5x)
+        btnGain10x = findViewById(R.id.btn_gain_10x)
+        containerAudioMeter = findViewById(R.id.container_audio_meter)
+        progressAudioAmplitude = findViewById(R.id.progress_audio_amplitude)
+        textAudioPeakWarning = findViewById(R.id.text_audio_peak_warning)
+
         adapter = SignalAdapter(this, ArrayList())
         listSignals.adapter = adapter
 
         // Sync initial state
         switchDisasterMode.isChecked = DisasterModeManager.isDisasterModeActive()
-        
+        switchRubbleAudio.isChecked = d.d.meshenger.disaster.RubbleAudioProcessor.isListeningActive()
+
         when (DisasterModeManager.currentStatus) {
             DisasterSignal.StatusType.SAFE -> radioSafe.isChecked = true
             DisasterSignal.StatusType.HELP -> radioHelp.isChecked = true
@@ -90,6 +112,7 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
         radioHelp.setOnTouchListener(disabledTouchListener)
         radioMedical.setOnTouchListener(disabledTouchListener)
         editNotes.setOnTouchListener(disabledTouchListener)
+        switchRubbleAudio.setOnTouchListener(disabledTouchListener)
 
         switchDisasterMode.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -98,10 +121,62 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
                 Toast.makeText(this, "Afet Kipi Yayını Başlatıldı (Wi-Fi UDP + Bluetooth)", Toast.LENGTH_SHORT).show()
             } else {
                 DisasterModeManager.stopDisasterMode()
+                if (d.d.meshenger.disaster.RubbleAudioProcessor.isListeningActive()) {
+                    d.d.meshenger.disaster.RubbleAudioProcessor.stopListening()
+                    switchRubbleAudio.isChecked = false
+                }
                 Toast.makeText(this, "Afet Kipi Yayını Durduruldu", Toast.LENGTH_SHORT).show()
             }
             updateButtonStates()
         }
+
+        switchRubbleAudio.setOnCheckedChangeListener { _, isChecked ->
+            checkBroadcastActive {
+                if (isChecked) {
+                    if (!Utils.hasPermission(this, Manifest.permission.RECORD_AUDIO)) {
+                        Toast.makeText(this, "Mikrofon İzni Gerekli!", Toast.LENGTH_SHORT).show()
+                        switchRubbleAudio.isChecked = false
+                        return@checkBroadcastActive
+                    }
+                    d.d.meshenger.disaster.RubbleAudioProcessor.startListening(this)
+                    Toast.makeText(this, "Enkaz Dinleme ve Ses Yükseltici Aktif (Gürültü Filtreli)", Toast.LENGTH_SHORT).show()
+                } else {
+                    d.d.meshenger.disaster.RubbleAudioProcessor.stopListening()
+                    Toast.makeText(this, "Enkaz Dinleme Durduruldu", Toast.LENGTH_SHORT).show()
+                }
+                updateButtonStates()
+            }
+        }
+
+        btnGain3x.setOnClickListener {
+            d.d.meshenger.disaster.RubbleAudioProcessor.gainMultiplier = 3.0f
+            updateGainButtonStyles(3)
+        }
+
+        btnGain5x.setOnClickListener {
+            d.d.meshenger.disaster.RubbleAudioProcessor.gainMultiplier = 5.0f
+            updateGainButtonStyles(5)
+        }
+
+        btnGain10x.setOnClickListener {
+            d.d.meshenger.disaster.RubbleAudioProcessor.gainMultiplier = 10.0f
+            updateGainButtonStyles(10)
+        }
+
+        d.d.meshenger.disaster.RubbleAudioProcessor.setOnAudioAmplitudeListener(object : d.d.meshenger.disaster.RubbleAudioProcessor.OnAudioAmplitudeListener {
+            override fun onAmplitudeChanged(amplitudePercentage: Int, peakDetected: Boolean) {
+                runOnUiThread {
+                    progressAudioAmplitude.progress = amplitudePercentage
+                    if (peakDetected) {
+                        textAudioPeakWarning.text = "⚠️ YÜKSEK SES / TIKIRTI ALGILANDI! (PEAK DETECTED)"
+                        textAudioPeakWarning.setTextColor(Color.parseColor("#EF4444"))
+                    } else {
+                        textAudioPeakWarning.text = "Ortam Dinleniyor... / Monitoring Audio..."
+                        textAudioPeakWarning.setTextColor(Color.parseColor("#818CF8"))
+                    }
+                }
+            }
+        })
 
         radioGroupStatus.setOnCheckedChangeListener { _, checkedId ->
             if (DisasterModeManager.isDisasterModeActive()) {
@@ -177,6 +252,14 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
         }
     }
 
+    private fun updateGainButtonStyles(selectedMultiplier: Int) {
+        val activeColor = Color.parseColor("#4338CA")
+        val inactiveColor = Color.parseColor("#312E81")
+        btnGain3x.setBackgroundColor(if (selectedMultiplier == 3) activeColor else inactiveColor)
+        btnGain5x.setBackgroundColor(if (selectedMultiplier == 5) activeColor else inactiveColor)
+        btnGain10x.setBackgroundColor(if (selectedMultiplier == 10) activeColor else inactiveColor)
+    }
+
     private fun updateButtonStates() {
         val isActive = DisasterModeManager.isDisasterModeActive()
         containerInteractiveControls.alpha = if (isActive) 1.0f else 0.5f
@@ -187,6 +270,20 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
         } else {
             textBeaconStatus.text = "Yayın Kapalı / Broadcast Inactive"
             textBeaconStatus.setTextColor(Color.parseColor("#94A3B8"))
+        }
+
+        val isRubbleListening = d.d.meshenger.disaster.RubbleAudioProcessor.isListeningActive()
+        switchRubbleAudio.isChecked = isRubbleListening
+        containerGainBoost.visibility = if (isRubbleListening) View.VISIBLE else View.GONE
+        containerAudioMeter.visibility = if (isRubbleListening) View.VISIBLE else View.GONE
+
+        if (isRubbleListening) {
+            val boostText = "${d.d.meshenger.disaster.RubbleAudioProcessor.gainMultiplier.toInt()}x Kazanç"
+            textRubbleAudioStatus.text = "Dinleme Açık ($boostText • Gürültü Filtreli)"
+            textRubbleAudioStatus.setTextColor(Color.parseColor("#818CF8"))
+        } else {
+            textRubbleAudioStatus.text = "Dinleme Kapalı / Listener Inactive"
+            textRubbleAudioStatus.setTextColor(Color.parseColor("#A5B4FC"))
         }
 
         if (DisasterModeManager.isWhistleActive()) {

@@ -498,6 +498,7 @@ class CallActivity : BaseActivity(), RTCCall.CallContext {
         }
 
         Log.d(this, "intent: ${intent.action}, state: ${this.lifecycle.currentState}")
+        d.d.meshenger.disaster.RubbleAudioProcessor.pauseForCall()
 
         when (val action = intent.action) {
             "ACTION_OUTGOING_CALL" -> initOutgoingCall()
@@ -1033,6 +1034,7 @@ class CallActivity : BaseActivity(), RTCCall.CallContext {
         } finally {
             RTCPeerConnection.incomingRTCCall = null // free for the garbage collector
             isCallInProgress = false
+            d.d.meshenger.disaster.RubbleAudioProcessor.resumeAfterCall(this)
         }
 
         super.onDestroy()
