@@ -12,12 +12,22 @@ import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 
 /*
  * Base class for every Activity
 */
 open class BaseActivity : AppCompatActivity() {
     private var currentTheme = R.style.AppTheme_SkyBlue
+
+    fun setAppLanguage(language: String) {
+        val localeList = if (language == "system" || language.isEmpty()) {
+            LocaleListCompat.getEmptyLocaleList()
+        } else {
+            LocaleListCompat.forLanguageTags(language)
+        }
+        AppCompatDelegate.setApplicationLocales(localeList)
+    }
 
     fun setDefaultNightMode(nightMode: String) {
         defaultNightMode = when (nightMode) {
@@ -56,8 +66,18 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    // set theme and night mode
+    // set theme, night mode and language
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (Database.isDatabaseLoaded()) {
+            val savedLanguage = Database.getSettings().language
+            val currentLocales = AppCompatDelegate.getApplicationLocales()
+            val expectedTag = if (savedLanguage == "system") "" else savedLanguage
+            val currentTag = if (currentLocales.isEmpty) "" else currentLocales.toLanguageTags()
+            if (expectedTag != currentTag) {
+                setAppLanguage(savedLanguage)
+            }
+        }
+
         if (currentTheme != defaultThemeName) {
             currentTheme = defaultThemeName
             setTheme(defaultThemeName)

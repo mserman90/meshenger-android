@@ -140,6 +140,14 @@
     <string name="settings_mode_label_basic">Temel (varsayılan)</string>
     <string name="settings_mode_label_expert">Uzman</string>
     <string name="settings_name">Ad</string>
+    <string name="settings_language">Uygulama Dili</string>
+    <string name="language_label_system">Sistem Varsayılanı</string>
+    <string name="language_label_tr">Türkçe</string>
+    <string name="language_label_en">English</string>
+    <string name="language_label_de">Deutsch</string>
+    <string name="language_label_es">Español</string>
+    <string name="language_label_fr">Français</string>
+    <string name="language_label_ru">Русский</string>
     <string name="settings_nightmode">Gece Kipi</string>
     <string name="settings_prompt_outgoing_calls">Giden Aramaları Onayla</string>
     <string name="settings_public_key">Genel Anahtar</string>

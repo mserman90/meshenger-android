@@ -40,6 +40,7 @@ class Settings {
     var cameraFramerate = "auto"
     var automaticStatusUpdates = true
     var themeName = "sky_blue"
+    var language = "system" // system, tr, en, de, es, fr, ru
     var skipStartupPermissionCheck = false
     var audioBitrateMax = "auto" // not used yet
     var videoBitrateMax = "auto" // not used yet
@@ -87,6 +88,7 @@ class Settings {
             s.cameraFramerate = obj.getString("camera_framerate")
             s.automaticStatusUpdates = obj.getBoolean("automatic_status_updates")
             s.themeName = obj.getString("theme_name")
+            s.language = obj.optString("language", "system")
             s.skipStartupPermissionCheck = obj.getBoolean("skip_startup_permission_check")
             s.audioBitrateMax = obj.getString("audio_bitrate_max")
             s.videoBitrateMax = obj.getString("video_bitrate_max")
@@ -147,6 +149,7 @@ class Settings {
             obj.put("camera_framerate", s.cameraFramerate)
             obj.put("automatic_status_updates", s.automaticStatusUpdates)
             obj.put("theme_name", s.themeName)
+            obj.put("language", s.language)
             obj.put("skip_startup_permission_check", s.skipStartupPermissionCheck)
             obj.put("audio_bitrate_max", s.audioBitrateMax)
             obj.put("video_bitrate_max", s.videoBitrateMax)

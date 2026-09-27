@@ -143,6 +143,14 @@
     <string name="settings_mode_label_basic">Basic (default)</string>
     <string name="settings_mode_label_expert">Expert</string>
     <string name="settings_name">Name</string>
+    <string name="settings_language">Language / Dil</string>
+    <string name="language_label_system">System (default)</string>
+    <string name="language_label_tr">Türkçe</string>
+    <string name="language_label_en">English</string>
+    <string name="language_label_de">Deutsch</string>
+    <string name="language_label_es">Español</string>
+    <string name="language_label_fr">Français</string>
+    <string name="language_label_ru">Русский</string>
     <string name="settings_nightmode">Night Mode</string>
     <string name="settings_prompt_outgoing_calls">Prompt Outgoing Calls</string>
     <string name="settings_public_key">Public Key</string>

@@ -94,6 +94,27 @@ class SettingsActivity : BaseActivity(), ServiceConnection {
             }
         }
 
+        setupSpinner(settings.language,
+            R.id.spinnerLanguage,
+            R.array.languageLabels,
+            R.array.languageValues,
+            object : SpinnerItemSelected {
+                override fun call(newValue: String?) {
+                    if (newValue != null) {
+                        settings.language = newValue
+                        Database.saveDatabase()
+                        setAppLanguage(newValue)
+
+                        // reload activity
+                        val intent = Intent(this@SettingsActivity, SettingsActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                        finish()
+                        overridePendingTransition(0, 0)
+                        startActivity(intent)
+                    }
+                }
+            })
+
         setupSpinner(settings.nightMode,
             R.id.spinnerNightModes,
             R.array.nightModeLabels,
