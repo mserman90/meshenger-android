@@ -222,7 +222,8 @@ class DisasterModeActivity : BaseActivity(), DisasterModeManager.OnSignalReceive
             locView.text = locStr
 
             notesView.text = if (signal.medicalNotes.isNotEmpty()) "Not: ${signal.medicalNotes}" else "Not: Bilgi verilmedi"
-            timeView.text = "Son Yayın: ${dateFormat.format(Date(signal.timestamp))}"
+            val hopStr = if (signal.hopCount == 0) "Doğrudan İletim" else "Aracı Cihazlar Üzerinden (${signal.hopCount} Sıçrama / Relay)"
+            timeView.text = "Son Yayın: ${dateFormat.format(Date(signal.timestamp))} • $hopStr"
 
             return view
         }

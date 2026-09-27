@@ -38,9 +38,11 @@ object DisasterModeManager {
     var medicalNotes: String = ""
     
     private val receivedSignalsMap = ConcurrentHashMap<String, DisasterSignal>()
+    private val seenMessageIds = ConcurrentHashMap<String, Long>()
     
     private var udpSocket: DatagramSocket? = null
     private var multicastLock: WifiManager.MulticastLock? = null
+    private var appContext: Context? = null
     
     private var broadcastThread: Thread? = null
     private var listenThread: Thread? = null
@@ -55,14 +57,55 @@ object DisasterModeManager {
             try {
                 val signal = DisasterSignal.fromJSON(rawData)
                 if (signal != null) {
-                    val key = "${signal.senderName}_BT_$senderAddress"
-                    receivedSignalsMap[key] = signal
-                    notifyListeners()
+                    handleIncomingSignal(signal, appContext)
                 }
             } catch (e: Exception) {
                 Log.d(DisasterModeManager, "BT signal parse error: $e")
             }
         }
+    }
+
+    fun handleIncomingSignal(signal: DisasterSignal, context: Context?) {
+        val now = System.currentTimeMillis()
+        // Purge old seen entries (> 10 mins)
+        seenMessageIds.entries.removeIf { now - it.value > 600_000 }
+
+        val isNewSignal = !seenMessageIds.containsKey(signal.id)
+        if (isNewSignal) {
+            seenMessageIds[signal.id] = now
+            val key = "${signal.senderName}_${signal.id}"
+            receivedSignalsMap[key] = signal
+            notifyListeners()
+
+            // Multi-hop Mesh Relay: Relay signal to neighbor nodes if TTL > 1
+            if (signal.ttl > 1) {
+                val relayedSignal = signal.copy(
+                    ttl = signal.ttl - 1,
+                    hopCount = signal.hopCount + 1
+                )
+                relaySignalToNetwork(context, relayedSignal)
+            }
+        }
+    }
+
+    private fun relaySignalToNetwork(context: Context?, relayedSignal: DisasterSignal) {
+        Thread {
+            try {
+                val jsonStr = relayedSignal.toJSON().toString()
+                val bytes = jsonStr.toByteArray(Charsets.UTF_8)
+                val packet = DatagramPacket(
+                    bytes, bytes.size,
+                    InetAddress.getByName("255.255.255.255"),
+                    DISASTER_PORT
+                )
+                udpSocket?.send(packet)
+                context?.let { ctx ->
+                    BluetoothTransportManager.broadcastMessage(ctx.applicationContext, jsonStr)
+                }
+            } catch (e: Exception) {
+                Log.d(this, "Relay error: $e")
+            }
+        }.start()
     }
 
     interface OnSignalReceivedListener {
@@ -115,11 +158,12 @@ object DisasterModeManager {
         if (isRunning.getAndSet(true)) return
 
         Log.d(this, "Starting Disaster Mode")
-        val appContext = context.applicationContext
+        val ctx = context.applicationContext
+        appContext = ctx
 
         // Acquire Wi-Fi Multicast lock
         try {
-            val wifiManager = appContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
+            val wifiManager = ctx.getSystemService(Context.WIFI_SERVICE) as? WifiManager
             multicastLock = wifiManager?.createMulticastLock("MeshengerDisasterLock")?.apply {
                 setReferenceCounted(true)
                 acquire()
@@ -130,7 +174,7 @@ object DisasterModeManager {
 
         // Start GPS location updates
         try {
-            locationManager = appContext.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
+            locationManager = ctx.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
             val locListener = object : LocationListener {
                 override fun onLocationChanged(loc: Location) { currentLocation = loc }
                 @Deprecated("Deprecated in Java")
@@ -172,9 +216,7 @@ object DisasterModeManager {
                     val str = String(packet.data, 0, packet.length, Charsets.UTF_8)
                     val signal = DisasterSignal.fromJSON(str)
                     if (signal != null) {
-                        val key = "${signal.senderName}_${signal.ipAddress}"
-                        receivedSignalsMap[key] = signal
-                        notifyListeners()
+                        handleIncomingSignal(signal, ctx)
                     }
                 } catch (e: Exception) {
                     if (!isRunning.get()) break
@@ -185,7 +227,7 @@ object DisasterModeManager {
         // Start Bluetooth Transport (Backup Layer)
         try {
             BluetoothTransportManager.registerListener(btListener)
-            BluetoothTransportManager.start(appContext)
+            BluetoothTransportManager.start(ctx)
         } catch (e: Exception) {
             Log.d(this, "Bluetooth Transport start error: $e")
         }
@@ -215,7 +257,7 @@ object DisasterModeManager {
                     udpSocket?.send(packet)
 
                     // Dual transport broadcast (RFCOMM Bluetooth)
-                    BluetoothTransportManager.broadcastMessage(appContext, jsonStr)
+                    BluetoothTransportManager.broadcastMessage(ctx, jsonStr)
                 } catch (e: Exception) {
                     Log.d(this, "Broadcast error: $e")
                 }
