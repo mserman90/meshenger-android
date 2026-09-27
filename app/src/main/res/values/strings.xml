@@ -15,7 +15,7 @@
     <string name="about_app_update_link" translatable="false">https://github.com/mserman90/meshenger-android/releases</string>
     <string name="address_management">Address Management</string>
     <string name="address_management_help_text">Select one or more IP addresses that will be included in the QR code you can will share. These addresses will be used by others to reach you. Be aware that the IP address change depending on the network. Enable your WLAN if no IP address is visible.</string>
-    <string name="app_description">Allow voice and video communication without any server or Internet access. Simply scan each others contact QR code and call each other. This works on most networks, e.g. at home, in community networks or at work.</string>
+    <string name="app_description">MeshengerTR is an open-source, serverless off-grid peer-to-peer communication &amp; emergency disaster beaconing app. It enables encrypted voice/video calls over local networks without internet or central servers, and includes Disaster Mode (UDP Multicast + BLE Mesh), Rubble Audio Listener with 3x/5x/10x amplification &amp; noise filter, Multi-hop Mesh Relay, and ISO 22324 safety color standards.</string>
     <string name="app_license" translatable="false">GPL-3.0-or-later</string>
     <string name="app_name" translatable="false">MeshengerTR</string>
     <string name="app_website" translatable="false">https://github.com/mserman90/meshenger-android</string>
