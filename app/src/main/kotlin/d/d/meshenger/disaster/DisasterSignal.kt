@@ -11,6 +11,7 @@ import java.util.UUID
 
 data class DisasterSignal(
     val id: String = UUID.randomUUID().toString(),
+    val senderDeviceId: String = "",
     val senderName: String,
     val status: StatusType,
     val latitude: Double?,
@@ -31,6 +32,7 @@ data class DisasterSignal(
     fun toJSON(): JSONObject {
         val json = JSONObject()
         json.put("id", id)
+        json.put("deviceId", senderDeviceId)
         json.put("name", senderName)
         json.put("status", status.name)
         json.put("lat", latitude ?: 0.0)
@@ -49,6 +51,7 @@ data class DisasterSignal(
                 val json = JSONObject(jsonStr)
                 DisasterSignal(
                     id = json.optString("id", UUID.randomUUID().toString()),
+                    senderDeviceId = json.optString("deviceId", ""),
                     senderName = json.optString("name", "Bilinmeyen Afetzede"),
                     status = try { StatusType.valueOf(json.optString("status", "SAFE")) } catch (_: Exception) { StatusType.SAFE },
                     latitude = if (json.has("lat") && json.getDouble("lat") != 0.0) json.getDouble("lat") else null,

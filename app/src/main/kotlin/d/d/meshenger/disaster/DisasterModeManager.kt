@@ -39,6 +39,7 @@ object DisasterModeManager {
     
     private val receivedSignalsMap = ConcurrentHashMap<String, DisasterSignal>()
     private val seenMessageIds = ConcurrentHashMap<String, Long>()
+    private var ownDeviceId: String = ""
     
     private var udpSocket: DatagramSocket? = null
     private var multicastLock: WifiManager.MulticastLock? = null
@@ -70,21 +71,28 @@ object DisasterModeManager {
         // Purge old seen entries (> 10 mins)
         seenMessageIds.entries.removeIf { now - it.value > 600_000 }
 
-        val isNewSignal = !seenMessageIds.containsKey(signal.id)
-        if (isNewSignal) {
-            seenMessageIds[signal.id] = now
-            val key = "${signal.senderName}_${signal.id}"
-            receivedSignalsMap[key] = signal
-            notifyListeners()
+        // 1. Self-Loop Protection: Ignore messages created by this device
+        if (ownDeviceId.isNotEmpty() && signal.senderDeviceId == ownDeviceId) {
+            return
+        }
 
-            // Multi-hop Mesh Relay: Relay signal to neighbor nodes if TTL > 1
-            if (signal.ttl > 1) {
-                val relayedSignal = signal.copy(
-                    ttl = signal.ttl - 1,
-                    hopCount = signal.hopCount + 1
-                )
-                relaySignalToNetwork(context, relayedSignal)
-            }
+        // 2. Duplicate Protection: Ignore messages already processed
+        if (seenMessageIds.containsKey(signal.id)) {
+            return
+        }
+
+        seenMessageIds[signal.id] = now
+        val key = "${signal.senderName}_${signal.id}"
+        receivedSignalsMap[key] = signal
+        notifyListeners()
+
+        // 3. Multi-hop Mesh Relay: Relay signal to neighbor nodes if TTL > 1
+        if (signal.ttl > 1) {
+            val relayedSignal = signal.copy(
+                ttl = signal.ttl - 1,
+                hopCount = signal.hopCount + 1
+            )
+            relaySignalToNetwork(context, relayedSignal)
         }
     }
 
@@ -160,6 +168,15 @@ object DisasterModeManager {
         Log.d(this, "Starting Disaster Mode")
         val ctx = context.applicationContext
         appContext = ctx
+
+        ownDeviceId = try {
+            d.d.meshenger.Utils.byteArrayToHexString(Database.getSettings().publicKey)
+        } catch (_: Exception) {
+            java.util.UUID.randomUUID().toString()
+        }
+        if (ownDeviceId.isEmpty()) {
+            ownDeviceId = java.util.UUID.randomUUID().toString()
+        }
 
         // Acquire Wi-Fi Multicast lock
         try {
@@ -239,6 +256,7 @@ object DisasterModeManager {
                     val userName = Database.getSettings().username.ifEmpty { "Kullanıcı" }
                     val localAddress = AddressUtils.collectAddresses().firstOrNull()?.address ?: "127.0.0.1"
                     val signal = DisasterSignal(
+                        senderDeviceId = ownDeviceId,
                         senderName = userName,
                         status = currentStatus,
                         latitude = currentLocation?.latitude,
