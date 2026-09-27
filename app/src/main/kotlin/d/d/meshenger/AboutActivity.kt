@@ -38,5 +38,10 @@ class AboutActivity : BaseActivity() {
             val intent = Intent(this, LicenseActivity::class.java)
             startActivity(intent)
         }
+
+        findViewById<TextView>(R.id.updateTv)?.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(getString(R.string.about_app_update_link)))
+            startActivity(intent)
+        }
     }
 }
