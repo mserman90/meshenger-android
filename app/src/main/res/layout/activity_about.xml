@@ -144,6 +144,26 @@
                 android:lineSpacingExtra="3dp"
                 android:textSize="13sp" />
 
+            <!-- Rubble Audio Specs Guide -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/lato_bold"
+                android:text="@string/about_rubble_audio_title"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:autoLink="web"
+                android:text="@string/about_rubble_audio_content"
+                android:textColor="#7B7B7B"
+                android:lineSpacingExtra="3dp"
+                android:textSize="13sp" />
+
             <!-- Direct GitHub Update Section -->
             <TextView
                 android:layout_width="wrap_content"

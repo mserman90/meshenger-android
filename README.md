@@ -22,10 +22,11 @@
 - **Yanlış Basım Koruması:** Afet kipi yayını kapalıyken acil durum butonlarının kilitli kalması ve etkileşimli uyarı mekanizması.
 
 ### 🎙️ 3. Enkaz Dinleme ve Ses Yükseltici (Rubble Audio Listener & Amplifier)
-- **Frekans Ayrıştırma & Gürültü Filtreleme:** Donanımsal gürültü engelleme (`NoiseSuppressor` / `AutomaticGainControl`) ve 300Hz–3.4kHz insan sesi ve enkaz altı tıkırtı frekans süzgeci.
-- **Dinamik Ses Yükseltme (Gain Boost):** Enkaz altından gelen cılız sesleri kulaklık/hoparlöre yüksek netlikle ileten **3x, 5x ve 10x (Maksimum)** kazanç seviyeleri.
-- **Canlı Ses Seviyesi ve Tıkırtı Tespiti:** Canlı grafik çubuğu (`ProgressBar`) ve otomatik peak tıkırtı uyarısı (`⚠️ YÜKSEK SES / TIKIRTI ALGILANDI!`).
-- **Çakışma Önleyici Ses Odağı:** Arama geldiğinde dinleme otomatik duraklatılır, arama bitince kaldığı yerden devam eder.
+- **Kaynak & Algoritma:** Ozan Sarıer'in açık kaynak [enkazdinlemeuygulamasi](https://github.com/ozansarier/enkazdinlemeuygulamasi) projesinin temel ses yakalama, süzgeç ve amplifikasyon mimarisinden esinlenerek modüler ve güvenli yapıda entegre edilmiştir.
+- **Frekans Ayrıştırma & Gürültü Filtreleme:** Donanımsal gürültü engelleme (`NoiseSuppressor` / `AutomaticGainControl`) ve **300Hz Yüksek Geçiren Filtre (High-Pass Filter)** ile jeneratör/rüzgar uğultuları ($\le 300\text{ Hz}$) kesilir; insan sesi ve enkaz altı tıkırtı frekans aralığı ($300\text{ Hz} - 3.4\text{ kHz}$) ön plana çıkarılır.
+- **Dinamik Ses Yükseltme (Gain Boost):** Enkaz altından gelen cılız sesleri kulaklık/hoparlöre yüksek netlikle ileten **3x (Standart), 5x (Orta Derinlik) ve 10x (Maksimum)** kazanç seviyeleri (Yumuşak Kırpma / Soft Clipping korumalı).
+- **Canlı Ses Seviyesi ve Tıkırtı Tespiti:** Gerçek zamanlı RMS analizi ile canlı grafik çubuğu (`ProgressBar`) ve otomatik peak tıkırtı uyarısı (`⚠️ YÜKSEK SES / TIKIRTI ALGILANDI!`).
+- **Çakışma Önleyici Ses Odağı:** Gelen aramada dinleme otomatik duraklatılır, arama bitince kaldığı yerden devam eder.
 
 ### 🔄 4. Çok Sıçramalı Mesh Aktarımı (Multi-hop Mesh Relay)
 - **Menzil Genişletme:** Acil durum sinyallerini aradaki çevre cihazlar üzerinden otomatik aktararak kapsama alanını genişletme (`ttl = 5`, `hopCount`).

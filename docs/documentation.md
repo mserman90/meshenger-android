@@ -125,7 +125,14 @@ This phase is concluded with the Meshenger 4.0.0 and further releases. Now an ap
 This phase introduced advanced off-grid emergency capabilities, disaster beaconing, rubble audio processing, and international safety standards:
 
 1. **Disaster Mode (SOS Beaconing):** Off-grid emergency broadcasting over UDP Multicast (Port 9876) and Bluetooth Low Energy / Mesh Transport. Includes location coordinates, blood group, medical notes, rubble location, acoustic whistle siren, and visual SOS strobe flash.
-2. **Rubble Audio Listener & Amplifier (`RubbleAudioProcessor`):** Low-latency microphone audio processing, hardware noise suppression (`NoiseSuppressor`/`AGC`), software bandpass filtering (300Hz-3.4kHz human voice/tapping frequency isolation), 3x/5x/10x gain boost, live amplitude progress meter, and peak noise activity detection. Includes automatic Audio Focus management (pauses during active WebRTC calls and resumes automatically).
+2. **Rubble Audio Listener & Amplifier (`RubbleAudioProcessor`):**
+   - **Source & Algorithm Reference:** Integrated as a secure module based on Ozan Sarıer's open-source [enkazdinlemeuygulamasi](https://github.com/ozansarier/enkazdinlemeuygulamasi) project.
+   - **Capture & Audio Pipeline:** 16 kHz PCM 16-Bit Mono capture stream operating on a high-priority background processing thread.
+   - **Filtering & Frequency Isolation:** Software 300 Hz High-Pass Filter cuts low-frequency hum, engine rumble, and wind noise ($\le 300\text{ Hz}$), while isolating human voice and rubble tapping frequencies ($300\text{ Hz} - 3.4\text{ kHz}$).
+   - **Dynamic Amplification:** 3x (Standard), 5x (Medium Depth), and 10x (Maximum Sensitivity) gain boost multipliers with Soft Clipping Protection to prevent speaker overdrive.
+   - **Live Amplitude & Peak Alert:** Real-time RMS calculation driving a live UI `ProgressBar` meter and triggering a red visual alert (`⚠️ YÜKSEK SES / TIKIRTI ALGILANDI!`) when audio energy exceeds 65%.
+   - **Hardware Noise Suppression:** Enables Android `NoiseSuppressor` and `AutomaticGainControl` (AGC) if supported by the host hardware.
+   - **Audio Focus Management:** Automatically pauses microphone processing during incoming/outgoing WebRTC calls and resumes seamlessly upon call completion.
 3. **Multi-hop Mesh Relay:** Automatic emergency signal relaying across intermediate neighbor nodes to extend broadcast range (`ttl = 5`, `hopCount`), deduplication (`messageId`, 10-minute cache), and self-loop prevention (`senderDeviceId` public key derivation).
 4. **ISO 22324 Safety Standards & Bilingual UI:** Fully bilingual interface (Turkish & English) with standardized ISO 22324 safety color status badges (🟢 ONLINE, 🔴 OFFLINE, 🟡 PENDING, ⚠️ ERROR, ⚪ UNREACHABLE).
 5. **Direct GitHub Releases Update:** In-app one-click link in the About activity to download direct release APKs from [GitHub Releases](https://github.com/mserman90/meshenger-android/releases).
