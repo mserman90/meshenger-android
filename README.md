@@ -71,6 +71,20 @@ En güncel **MeshengerTR** `.apk` sürümlerini doğrudan GitHub üzerindeki sü
 
 ---
 
+## ⚖️ Yasal Bildirim, Beta Test ve Sorumluluk Reddi (Legal Disclaimer & Beta Testing Notice)
+
+> [!CAUTION]
+> **⚠️ BETA / TEST AŞAMASI UYARISI:**
+> Bu uygulama henüz deneysel (Beta / Test) aşamasında açık kaynaklı bir yazılımdır. Arama-kurtarma ve acil durum senaryolarında ek/yardımcı bir araç olarak tasarlanmış olup, resmi acil durum kanallarının (AFAD, 112 Acil Çağrı vb.) veya profesyonel arama-kurtarma teçhizatlarının yerini asla alamaz.
+
+> [!WARNING]
+> **⚖️ YASAL SORUMLULUK REDDİ (DISCLAIMER OF LIABILITY):**
+> Yazılım "olduğu gibi" (AS IS) ve "mevcut haliyle" herhangi bir açık veya zımnı garanti verilmeksizin sunulmaktadır. Geliştiriciler, katkıda bulunanlar ve lisansörler; uygulamanın kesintisiz çalışması, sinyal iletim garantisi, enkaz altı ses tespiti doğruluğu, veri kaybı, cihaz hasarı veya kullanım sırasında oluşabilecek doğrudan/dolaylı hiçbir can ve mal kaybından veya zarardan yasal olarak sorumlu tutulamaz. Kullanıcı uygulamayı tüm riskleri kabul ederek kendi sorumluluğunda çalıştırır.
+>
+> *THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, CAN OR PROPERTY LOSS, SIGNAL FAILURE, INACCURATE AUDIO DETECTION, OR OTHER LIABILITY ARISING FROM THE USE OF THE SOFTWARE.*
+
+---
+
 ## 📄 Lisans (License)
 
 GNU General Public License v3.0 or later (GPL-3.0-or-later). Details can be found in the [LICENSE](LICENSE) file.
